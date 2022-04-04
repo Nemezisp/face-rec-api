@@ -8,7 +8,7 @@ const image = require('./controllers/image')
 const profile = require('./controllers/profile')
 
 const cors = require('cors');
-const db = require('knex')({
+const db = require('knex')({ //Heroku database connection
     client: 'pg',
     connection: {
         connectionString: process.env.DATABASE_URL,
