@@ -1,6 +1,6 @@
 const express = require('express')
-const bcrypt = require('bcrypt');
-const saltRounds = 10;
+const bcrypt = require('bcryptjs');
+const saltRounds = bcrypt.genSaltSync(10);
 
 const register = require('./controllers/register')
 const signIn = require('./controllers/signIn')
@@ -8,20 +8,18 @@ const image = require('./controllers/image')
 const profile = require('./controllers/profile')
 
 const cors = require('cors');
-const db = require('knex')({ //Heroku database connection
-    client: 'pg',
-    connection: {
-        connectionString: process.env.DATABASE_URL,
-        ssl: {
-            rejectUnauthorized: false
-        }
-    }
+
+const db = require('knex')({ 
+	client: 'pg', 
+	connection: process.env.POSTGRES_URI
 })
 
 const app = express()
 
 app.use(express.json());
 app.use(cors())
+
+console.log('life is life')
 
 app.get('/', (req, res) => {res.send('success')})
 app.post('/signin', (req, res) => {signIn.handleSignIn(req, res, db, bcrypt)})
