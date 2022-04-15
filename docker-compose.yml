@@ -1,0 +1,23 @@
+version: '4.7.0'
+
+services:
+  # Backend
+  face-rec-api:
+    container_name: backend
+    env_file:
+      - ./.env
+    build: ./
+    volumes:
+      - ./:/usr/src/face-rec-api
+    command: npm start
+    ports:
+      - "3000:3000"
+
+  # PostgreSQL
+  postgres:
+    container_name: postgres
+    env_file:
+      - ./.env 
+    build: ./postgres
+    ports:
+      - "5431:5432"
