@@ -3,14 +3,12 @@ const jwt = require('jsonwebtoken')
 if (process.env.REDISTOGO_URL) {
   const rtg = require("url").parse(process.env.REDISTOGO_URL);
   const redisClient = require("redis").createClient(rtg.port, rtg.hostname);
-  console.log('rtg', rtg)
   redisClient.auth(rtg.auth.split(":")[1]);
 } else {
   const redisClient = require("redis").createClient();
 }
 
 const handleSignIn = (req, res, db, bcrypt) => {
-  console.log('here-handle')
   const {email, password} = req.body
 
   if (!email || !password) {
@@ -21,6 +19,7 @@ const handleSignIn = (req, res, db, bcrypt) => {
     .where('email', '=', email)
     .then(data => {
         const isValid = bcrypt.compareSync(password, data[0].hash);
+        console.log('valid', isValid)
         if (isValid) {
             return db.select('*').from('users')
               .where('email', '=', email)
@@ -44,11 +43,13 @@ const getAuthTokenId = (req, res) => {
 }
 
 const signToken = (email) => {
+  console.log('sign', process.env.JWTSECRET)
   const jwtPayload = { email }
   return jwt.sign(jwtPayload, process.env.JWTSECRET, {expiresIn: '2 days'});
 }
 
 const setToken = (token, id) => {
+  console.log('')
   return Promise.resolve(redisClient.set(token, id))
 }
 
@@ -61,11 +62,11 @@ const createSession = (user) => {
 }
 
 const signInAuthentication = (req, res, db, bcrypt) => {
-  console.log('here-auth')
   const { authorization } = req.headers;
   return authorization ? getAuthTokenId(req, res) : 
     handleSignIn(req, res, db, bcrypt)
       .then(data => {
+        console.log('data', data)
         return data.id && data.email ? createSession(data) : Promise.reject('Error')
       })
       .then(session => res.json(session))
