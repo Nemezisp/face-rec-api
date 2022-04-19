@@ -43,19 +43,19 @@ const getAuthTokenId = (req, res) => {
 
 const signToken = (email) => {
   const jwtPayload = { email }
-  console.log('token', jwt.sign(jwtPayload, process.env.JWTSECRET, {expiresIn: '2 days'}))
   return jwt.sign(jwtPayload, process.env.JWTSECRET, {expiresIn: '2 days'});
 }
 
 const setToken = (token, id) => {
-  console.log('redis', redisClient)
   console.log('token', token, id)
+  console.log(Promise.resolve(redisClient.set(token, id)))
   return Promise.resolve(redisClient.set(token, id))
 }
 
 const createSession = (user) => {
   const { email, id } = user;
   const token = signToken(email);
+  console.log('pre-token', token)
   return setToken(token, id)
     .then(() => { return {success: 'true', userId: id, token}})
     .catch(console.log)
