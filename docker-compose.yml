@@ -1,6 +1,22 @@
 version: '4.7.0'
 
 services:
+  # PostgreSQL
+  postgres:
+    container_name: postgres
+    env_file:
+      - ./.env 
+    build: ./postgres
+    ports:
+      - "5431:5432"
+
+  # Redis
+  redis:
+    container_name: redis
+    image: redis
+    ports:
+      - "6379:6379"
+
   # Backend
   face-rec-api:
     container_name: backend
@@ -12,12 +28,3 @@ services:
     command: npm start
     ports:
       - "3000:3000"
-
-  # PostgreSQL
-  postgres:
-    container_name: postgres
-    env_file:
-      - ./.env 
-    build: ./postgres
-    ports:
-      - "5431:5432"
