@@ -42,13 +42,14 @@ const getAuthTokenId = (req, res) => {
 }
 
 const signToken = (email) => {
+  console.log('sign', email)
   const jwtPayload = { email }
   return jwt.sign(jwtPayload, process.env.JWTSECRET, {expiresIn: '2 days'});
 }
 
 const setToken = (token, id) => {
-  console.log(redisClient)
-  console.log(token, id)
+  console.log('redis', redisClient)
+  console.log('token', token, id)
   return Promise.resolve(redisClient.set(token, id))
 }
 
