@@ -3,7 +3,6 @@ const jwt = require('jsonwebtoken')
 if (process.env.REDISTOGO_URL) {
   var rtg = require("url").parse(process.env.REDISTOGO_URL);
   var redisClient = require("redis").createClient(rtg.port, rtg.hostname);
-  console.log('redis', redisClient)
   redisClient.auth(rtg.auth.split(":")[1]);
 } else {
   var redisClient = require("redis").createClient();
@@ -48,8 +47,6 @@ const signToken = (email) => {
 }
 
 const setToken = (token, id) => {
-  console.log('redis-2')
-  console.log(redisClient)
   return Promise.resolve(redisClient.set(token, id))
 }
 
@@ -73,5 +70,6 @@ const signInAuthentication = (req, res, db, bcrypt) => {
 }
 
 module.exports = {
-    signInAuthentication
+    signInAuthentication,
+    redisClient
 }
