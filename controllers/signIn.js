@@ -1,11 +1,12 @@
 const jwt = require('jsonwebtoken')
 
 if (process.env.REDISTOGO_URL) {
-  var rtg   = require("url").parse(process.env.REDISTOGO_URL);
-  var redisClient = require("redis").createClient(rtg.port, rtg.hostname);
+  const rtg = require("url").parse(process.env.REDISTOGO_URL);
+  const redisClient = require("redis").createClient(rtg.port, rtg.hostname);
+  console.log(rtg, redisClient)
   redisClient.auth(rtg.auth.split(":")[1]);
 } else {
-  var redisClient = require("redis").createClient();
+  const redisClient = require("redis").createClient();
 }
 
 const handleSignIn = (req, res, db, bcrypt) => {
