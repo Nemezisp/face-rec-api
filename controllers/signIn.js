@@ -19,7 +19,6 @@ const handleSignIn = (req, res, db, bcrypt) => {
     .where('email', '=', email)
     .then(data => {
         const isValid = bcrypt.compareSync(password, data[0].hash);
-        console.log('valid', isValid)
         if (isValid) {
             return db.select('*').from('users')
               .where('email', '=', email)
@@ -43,13 +42,13 @@ const getAuthTokenId = (req, res) => {
 }
 
 const signToken = (email) => {
-  console.log('sign', process.env.JWTSECRET)
   const jwtPayload = { email }
   return jwt.sign(jwtPayload, process.env.JWTSECRET, {expiresIn: '2 days'});
 }
 
 const setToken = (token, id) => {
-  console.log('')
+  console.log(redisClient)
+  console.log(token, id)
   return Promise.resolve(redisClient.set(token, id))
 }
 
@@ -66,7 +65,6 @@ const signInAuthentication = (req, res, db, bcrypt) => {
   return authorization ? getAuthTokenId(req, res) : 
     handleSignIn(req, res, db, bcrypt)
       .then(data => {
-        console.log('data', data)
         return data.id && data.email ? createSession(data) : Promise.reject('Error')
       })
       .then(session => res.json(session))
