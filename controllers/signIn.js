@@ -1,11 +1,12 @@
 const jwt = require('jsonwebtoken')
 
 if (process.env.REDISTOGO_URL) {
-  const rtg = require("url").parse(process.env.REDISTOGO_URL);
-  const redisClient = require("redis").createClient(rtg.port, rtg.hostname);
+  var rtg = require("url").parse(process.env.REDISTOGO_URL);
+  var redisClient = require("redis").createClient(rtg.port, rtg.hostname);
+  console.log('redis', redisClient)
   redisClient.auth(rtg.auth.split(":")[1]);
 } else {
-  const redisClient = require("redis").createClient();
+  var redisClient = require("redis").createClient();
 }
 
 const handleSignIn = (req, res, db, bcrypt) => {
@@ -47,15 +48,14 @@ const signToken = (email) => {
 }
 
 const setToken = (token, id) => {
-  console.log('token', token, id)
-  console.log(Promise.resolve(redisClient.set(token, id)))
+  console.log('redis-2')
+  console.log(redisClient)
   return Promise.resolve(redisClient.set(token, id))
 }
 
 const createSession = (user) => {
   const { email, id } = user;
   const token = signToken(email);
-  console.log('pre-token', token)
   return setToken(token, id)
     .then(() => { return {success: 'true', userId: id, token}})
     .catch(console.log)
