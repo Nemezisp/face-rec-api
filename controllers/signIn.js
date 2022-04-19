@@ -4,13 +4,13 @@ if (process.env.REDISTOGO_URL) {
   const rtg = require("url").parse(process.env.REDISTOGO_URL);
   const redisClient = require("redis").createClient(rtg.port, rtg.hostname);
   console.log('rtg', rtg)
-  console.log('redis', redisClient)
   redisClient.auth(rtg.auth.split(":")[1]);
 } else {
   const redisClient = require("redis").createClient();
 }
 
 const handleSignIn = (req, res, db, bcrypt) => {
+  console.log('here-handle')
   const {email, password} = req.body
 
   if (!email || !password) {
@@ -61,6 +61,7 @@ const createSession = (user) => {
 }
 
 const signInAuthentication = (req, res, db, bcrypt) => {
+  console.log('here-auth')
   const { authorization } = req.headers;
   return authorization ? getAuthTokenId(req, res) : 
     handleSignIn(req, res, db, bcrypt)
