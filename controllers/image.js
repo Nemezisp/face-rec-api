@@ -1,5 +1,3 @@
-const Clarifai = require('clarifai')
-
 const {ClarifaiStub, grpc} = require("clarifai-nodejs-grpc");
 
 const stub = ClarifaiStub.grpc();
