@@ -13,12 +13,12 @@ const models = {
     food: 'bd367be194cf45149e75f01d59f77ba7'
 }
 
-const handleApiCall = (req, res) => {
-    if (req.body.mode === 'demographics') {
+const getClarifaiResults = (model, input, inputType, res) => {
+    if (model === 'demographics') {
         stub.PostWorkflowResults(
             {
                 workflow_id: "Demographics",
-                inputs: [{data: {image: {url: req.body.input}}}]
+                inputs: [{data: {image: {[inputType]: input}}}]
             },
             metadata,
             (err, response) => {
@@ -33,8 +33,8 @@ const handleApiCall = (req, res) => {
     } else {
         stub.PostModelOutputs(
             {
-                model_id: models[req.body.mode],
-                inputs: [{data: {image: {url: req.body.input}}}]
+                model_id: models[model],
+                inputs: [{data: {image: {[inputType]: input}}}]
             },
             metadata,
             (err, response) => {
@@ -47,6 +47,20 @@ const handleApiCall = (req, res) => {
             }
         )
     }
+}
+
+const handleLocalApiCall = (req, res) => {
+    let model = req.query.model
+    let input = [...req.file.buffer]
+    let inputType = 'base64'
+    getClarifaiResults(model, input, inputType, res)
+}
+
+const handleApiCall = (req, res) => {
+    let model = req.body.mode
+    let input = req.body.input
+    let inputType = 'url'
+    getClarifaiResults(model, input, inputType, res)
 }
 
 const handleImage = (req, res, db) => {
@@ -62,5 +76,6 @@ const handleImage = (req, res, db) => {
 
 module.exports = {
     handleImage,
-    handleApiCall
+    handleApiCall,
+    handleLocalApiCall
 }
