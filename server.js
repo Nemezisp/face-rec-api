@@ -12,7 +12,6 @@ const signIn = require('./controllers/signIn')
 const image = require('./controllers/image')
 const profile = require('./controllers/profile')
 const auth = require('./controllers/authorization')
-const getS3puturl = require('./controllers/getS3puturl')
 
 const cors = require('cors');
 
