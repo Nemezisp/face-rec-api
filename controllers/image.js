@@ -49,17 +49,17 @@ const getClarifaiResults = (model, input, inputType, res) => {
     }
 }
 
-const handleLocalApiCall = (req, res) => {
-    let model = req.query.model
-    let input = [...req.file.buffer]
-    let inputType = 'base64'
+const handleLocalApiCall = async (req, res) => {
+    const model = req.query.model
+    const input = [...req.file.buffer]
+    const inputType = 'base64'
     getClarifaiResults(model, input, inputType, res)
 }
 
 const handleApiCall = (req, res) => {
-    let model = req.body.mode
-    let input = req.body.input
-    let inputType = 'url'
+    const model = req.body.mode
+    const input = req.body.input
+    const inputType = 'url'
     getClarifaiResults(model, input, inputType, res)
 }
 
