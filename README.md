@@ -1,4 +1,7 @@
-# Face recognition app backend
+# Everyting recognition app server
 
-Master branch on Heroku, backend for https://face-rec-app-11.herokuapp.com/.
-Docker branch has dockerized version.
+Backend server for [repo](https://github.com/Nemezisp/face-rec-app).\
+Built in **Node.js and Express.js**.
+
+Master branch on Heroku.\
+**Docker** branch has dockerized version.
